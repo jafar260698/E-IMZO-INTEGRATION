@@ -1,4 +1,4 @@
-# eimzo_id_example
+# integration_example_with_eimzo
 
 A new Flutter project.
 
