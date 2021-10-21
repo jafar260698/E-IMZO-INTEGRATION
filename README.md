@@ -1,6 +1,6 @@
 # integration_example_with_eimzo
 
-A new Flutter project.
+Project support null-safety also, it is on null safety branch
 
 ## Getting Started
 
