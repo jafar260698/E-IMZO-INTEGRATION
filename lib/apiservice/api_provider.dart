@@ -10,7 +10,7 @@ import 'exceptions.dart';
 
 class ApiProvider {
   Client client = Client();
-  BuildContext context;
+  BuildContext? context;
 
   final baseUrl = 'https://my.soliq.uz/';
 
@@ -21,7 +21,7 @@ class ApiProvider {
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8'
       });
 
-      print(response.request.headers.toString());
+      print(response.request!.headers.toString());
       var res = _response(response);
       responseJson = DeepLinkResponse.fromJson(res);
     } on FetchDataException catch (e){
@@ -31,7 +31,7 @@ class ApiProvider {
   }
 
 
-  Future<StatusModel> checkStatus(String docId,String url) async {
+  Future<StatusModel> checkStatus(String? docId,String url) async {
     var responseJson;
     var uri = Uri.parse('$url?documentId=$docId');
 

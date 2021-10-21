@@ -2,11 +2,11 @@
 
 
 class DeepLinkResponse {
-  int status;
-  String message;
-  String siteId;
-  String documentId;
-  String challange;
+  int? status;
+  String? message;
+  String? siteId;
+  String? documentId;
+  String? challange;
 
   DeepLinkResponse(
       {this.status,

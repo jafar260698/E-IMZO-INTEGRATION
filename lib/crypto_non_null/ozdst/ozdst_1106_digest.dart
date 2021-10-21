@@ -11,14 +11,14 @@ class OzDSt1106Digest {
   var _L = new List.filled(32,0);
   var _M = new List.filled(32,0);
   var _Sum = new List.filled(32,0);
-  List<List<int>> _C = new List.filled(4, null);
+  List<List<int>?> _C = new List.filled(4, null);
 
   var _xBuf = new List.filled(32,0);
-  int _xBufOff;
-  int _byteCount;
+  int _xBufOff = 0;
+  int _byteCount = 0;
 
   var _cipher = new GOST28147Engine();
-  List<int> _sBox;
+  List<int> _sBox = [];
 
   static _arraycopy(List<int> inp, int inOff, List<int> out, int outOff, int length) {
     for (int i = 0; i < length; i++) {
@@ -141,7 +141,7 @@ class OzDSt1106Digest {
     for (int i = 1; i < 4; i++) {
       List<int> tmpA = this._A(this._U);
       for (int j = 0; j < 32; j++) {
-        this._U[j] = (tmpA[j] ^ this._C[i][j]) & 0xFF;
+        this._U[j] = (tmpA[j] ^ this._C[i]![j]) & 0xFF;
       }
       this._V = this._A(this._A(this._V));
       for (int j = 0; j < 32; j++) {
@@ -221,8 +221,8 @@ class OzDSt1106Digest {
     this._H.fillRange(0, this._H.length, 0);
     this._L.fillRange(0, this._L.length, 0);
     this._M.fillRange(0, this._M.length, 0);
-    this._C[1].fillRange(0, this._C[1].length, 0);
-    this._C[3].fillRange(0, this._C[3].length, 0);
+    this._C[1]!.fillRange(0, this._C[1]!.length, 0);
+    this._C[3]!.fillRange(0, this._C[3]!.length, 0);
     this._Sum.fillRange(0, this._Sum.length, 0);
     this._xBuf.fillRange(0, this._xBuf.length, 0);
 
@@ -248,7 +248,7 @@ class OzDSt1106Digest {
     //     this.xBuf[i] = 0;
     // }
 
-    _arraycopy(this._C2, 0, this._C[2], 0, this._C2.length);
+    _arraycopy(this._C2, 0, this._C[2]!, 0, this._C2.length);
   }
 
   //  256 bitsblock modul -> (Sum + a mod (2^256))

@@ -102,8 +102,8 @@ const DSbox_A = [
 class GOST28147Engine {
 
   static final BLOCK_SIZE = 8;
-  List<int> _workingKey;
-  bool _forEncryption;
+  List<int> _workingKey = [];
+  bool _forEncryption = false;
 
   List<int> _S = Sbox_Default;
 
