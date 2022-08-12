@@ -1,7 +1,5 @@
-# integration_example_with_eimzo
+# E IMZO INTEGRATION 
 
-A new Flutter project.
-
-## Getting Started
+Project support null-safety also, it is on null safety branch
 
 Here is a webpage to help you test your cases: https://m.e-imzo.uz/demo2/#
