@@ -100,7 +100,7 @@ class LoginViewModel extends BaseViewModel{
 
     var raw = challange?.codeUnits;
     // in case of document(json,xml) to sign
-    // var raw = document?.codeUnits;
+    // var raw = utf8.encode(document);
     var doc64_send2VerifyFunc = base64Encode(raw!);
     // send doc64_send2VerifyFunc to backend
 
