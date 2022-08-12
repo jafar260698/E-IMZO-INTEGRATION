@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
@@ -104,12 +105,12 @@ class LoginViewModel extends BaseViewModel{
     var doc64_send2VerifyFunc = base64Encode(raw!);
     // send doc64_send2VerifyFunc to backend
 
-    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw!)}\n///////////");
+    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw)}\n///////////");
     print("///////////\nchallange b64: ${doc64_send2VerifyFunc}\n///////////");
 
     
     var docHash = GostHash.hashGost2Hex(raw);
-    var code = siteId! + documentId! + docHash!;
+    var code = siteId! + documentId! + docHash;
     var crc32 = Crc32.calcHex(code);
     code += crc32;
     print("Deep Code $code");
@@ -118,9 +119,10 @@ class LoginViewModel extends BaseViewModel{
 
   _launchURL(String code) async {
     var _deepLink = 'eimzo://sign?qc=$code';
-    await canLaunch(_deepLink)
-        ? launch(_deepLink)
-        : throw 'Could not launch $_deepLink';
+    launch(_deepLink);
+    // await canLaunch(_deepLink)
+    //     ? launch(_deepLink)
+    //     : throw 'Could not launch $_deepLink';
     recursion(102);
   }
 

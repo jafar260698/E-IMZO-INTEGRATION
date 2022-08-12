@@ -36,7 +36,7 @@ class LoginPage extends StatelessWidget {
                   title: 'Send',
                   onPressed: () {
                     print("Send");
-                    model.callbackNewImzo();
+                    model.send();
                   },
                   isLoading: model.isLoading),
               SizedBox(height: 10),
