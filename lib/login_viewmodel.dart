@@ -97,9 +97,19 @@ class LoginViewModel extends BaseViewModel{
     _successStatus=false;
     notifyListeners();
     print("///////////\nsiteId: $siteId \n documentId: $documentId \n///////////");
-    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost(challange!)}\n///////////");
-    var docHash = GostHash.hashGost(challange!);
-    var code = siteId! + documentId! + docHash;
+
+    var raw = challange?.codeUnits;
+    // in case of document(json,xml) to sign
+    // var raw = document?.codeUnits;
+    var doc64_send2VerifyFunc = base64Encode(raw!);
+    // send doc64_send2VerifyFunc to backend
+
+    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw!)}\n///////////");
+    print("///////////\nchallange b64: ${doc64_send2VerifyFunc}\n///////////");
+
+    
+    var docHash = GostHash.hashGost2Hex(raw);
+    var code = siteId! + documentId! + docHash!;
     var crc32 = Crc32.calcHex(code);
     code += crc32;
     print("Deep Code $code");
