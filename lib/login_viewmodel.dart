@@ -135,14 +135,13 @@ class LoginViewModel extends BaseViewModel{
   void signFiles(Uint8List files) {
     siteId = "20e2";  // your site id
     documentId = "2F472331"; // your document id
-    String result = utf8.decode(files); // utf8
+  //  String result = utf8.decode(files); // utf8
     String result2 = String.fromCharCodes(files); // utf16
-
     var docHash = GostHash.hashGost2Hex(files);
-    var docHash2 = GostHash.hashGost(result);
+  //  var docHash2 = GostHash.hashGost(result);
 
     print("DocHash $docHash");
-    print("DocHash2 $docHash2");
+  //  print("DocHash2 $docHash2");
 
     var code = siteId! + documentId! + docHash;
     var crc32 = Crc32.calcHex(code);
