@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,12 +9,12 @@ import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'apiservice/api_provider.dart';
 import 'crc32.dart';
-import 'crypto/gost_hash.dart';
+import 'crypto_non_null/gost_hash.dart';
 import 'model/deep_link_response.dart';
 
 
 class LoginViewModel extends BaseViewModel{
-  BuildContext context;
+  late BuildContext context;
   var _apiProvider = ApiProvider();
   var _sendController = new TextEditingController();
   TextEditingController get sendController => _sendController;
@@ -33,9 +34,9 @@ class LoginViewModel extends BaseViewModel{
   Color _color=Colors.green;
   Color get color=>_color;
 
-  String documentId;
-  String siteId;
-  String challange;
+  String? documentId;
+  String? siteId;
+  String? challange;
 
   String responseSend="";
   String successMessage="";
@@ -97,9 +98,19 @@ class LoginViewModel extends BaseViewModel{
     _successStatus=false;
     notifyListeners();
     print("///////////\nsiteId: $siteId \n documentId: $documentId \n///////////");
-    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost(challange)}\n///////////");
-    var docHash = GostHash.hashGost(challange);
-    var code = siteId + documentId + docHash;
+
+    var raw = challange?.codeUnits;
+    // in case of document(json,xml) to sign
+    // var raw = document?.codeUnits;
+    var doc64_send2VerifyFunc = base64Encode(raw!);
+    // send doc64_send2VerifyFunc to backend
+
+    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw)}\n///////////");
+    print("///////////\nchallange b64: ${doc64_send2VerifyFunc}\n///////////");
+
+    
+    var docHash = GostHash.hashGost2Hex(raw);
+    var code = siteId! + documentId! + docHash;
     var crc32 = Crc32.calcHex(code);
     code += crc32;
     print("Deep Code $code");
@@ -108,9 +119,10 @@ class LoginViewModel extends BaseViewModel{
 
   _launchURL(String code) async {
     var _deepLink = 'eimzo://sign?qc=$code';
-    await canLaunch(_deepLink)
-        ? launch(_deepLink)
-        : throw 'Could not launch $_deepLink';
+    launch(_deepLink);
+    // await canLaunch(_deepLink)
+    //     ? launch(_deepLink)
+    //     : throw 'Could not launch $_deepLink';
     recursion(102);
   }
 
