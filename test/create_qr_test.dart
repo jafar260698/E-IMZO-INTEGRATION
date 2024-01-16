@@ -1,5 +1,5 @@
 import 'package:eimzo_id_example/crc32.dart';
-import 'package:eimzo_id_example/crypto/gost_hash.dart';
+import 'package:eimzo_id_example/crypto_non_null/gost_hash.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

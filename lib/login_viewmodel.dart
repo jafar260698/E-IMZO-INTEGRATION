@@ -1,19 +1,22 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:device_apps/device_apps.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'apiservice/api_provider.dart';
 import 'crc32.dart';
-import 'crypto/gost_hash.dart';
+import 'crypto_non_null/gost_hash.dart';
 import 'model/deep_link_response.dart';
 
 
 class LoginViewModel extends BaseViewModel{
-  BuildContext context;
+  late BuildContext context;
   var _apiProvider = ApiProvider();
   var _sendController = new TextEditingController();
   TextEditingController get sendController => _sendController;
@@ -33,9 +36,9 @@ class LoginViewModel extends BaseViewModel{
   Color _color=Colors.green;
   Color get color=>_color;
 
-  String documentId;
-  String siteId;
-  String challange;
+  String? documentId;
+  String? siteId;
+  String? challange;
 
   String responseSend="";
   String successMessage="";
@@ -97,12 +100,56 @@ class LoginViewModel extends BaseViewModel{
     _successStatus=false;
     notifyListeners();
     print("///////////\nsiteId: $siteId \n documentId: $documentId \n///////////");
-    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost(challange)}\n///////////");
-    var docHash = GostHash.hashGost(challange);
-    var code = siteId + documentId + docHash;
+
+    var raw = challange?.codeUnits;
+    // in case of document(json,xml) to sign
+    // var raw = utf8.encode(document);
+    var doc64_send2VerifyFunc = base64Encode(raw!);
+    // send doc64_send2VerifyFunc to backend
+
+    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw)}\n///////////");
+    print("///////////\nchallange b64: ${doc64_send2VerifyFunc}\n///////////");
+
+    
+    var docHash = GostHash.hashGost2Hex(raw);
+    var code = siteId! + documentId! + docHash!;
     var crc32 = Crc32.calcHex(code);
     code += crc32;
     print("Deep Code $code");
+    _launchURL(code);
+  }
+
+  Future<void> getFileFromStorage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    var file = result.files.first;
+    print(file.bytes);
+
+    File dataFile = new File.fromUri(Uri.parse(file.path!));
+    Uint8List bytes8 = dataFile.readAsBytesSync();
+
+    signFiles(bytes8);
+  }
+
+  void signFiles(Uint8List files) {
+    siteId = "20e2";  // your site id
+    documentId = "2F472331"; // your document id
+    String result = utf8.decode(files); // utf8
+    String result2 = String.fromCharCodes(files); // utf16
+
+    var docHash = GostHash.hashGost2Hex(files);
+    var docHash2 = GostHash.hashGost(result);
+
+    print("DocHash $docHash");
+    print("DocHash2 $docHash2");
+
+    var code = siteId! + documentId! + docHash;
+    var crc32 = Crc32.calcHex(code);
+    print("Crc32 $crc32");
+
+    code += crc32;
+
     _launchURL(code);
   }
 

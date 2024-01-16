@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomButton extends StatelessWidget {
-  final String title;
-  final Function onPressed;
-  final bool isLoading;
+  final String? title;
+  final Function? onPressed;
+  final bool? isLoading;
 
   const CustomButton(
-      {Key key,
+      {Key? key,
          this.title,
          this.onPressed,
          this.isLoading})
@@ -26,7 +26,7 @@ class CustomButton extends StatelessWidget {
         ),
         shadowColor: Color(0xff1171FF).withOpacity(0.3),
         child: CupertinoButton(
-          padding: isLoading
+          padding: isLoading!
               ? EdgeInsets.all(0)
               : EdgeInsets.symmetric(
             vertical: 16,
@@ -34,11 +34,11 @@ class CustomButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(16),
           color: Color(0xff1171FF),
-          onPressed: onPressed,
-          child: isLoading
+          onPressed: onPressed as void Function()?,
+          child: isLoading!
               ? loadingWidget()
               : Text(
-            title,
+            title!,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,

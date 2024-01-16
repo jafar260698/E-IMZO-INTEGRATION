@@ -8,31 +8,30 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  qr_code_scanner: ^0.3.0
-  url_launcher: ^6.0.3
+  url_launcher: ^6.0.12
 
   # Network
-  http: ^0.13.3
-  flutter_spinkit: ^5.0.0
-
-
+  http: ^0.13.4
+  flutter_spinkit: ^5.1.0
 
   # Redirect another app
   device_apps: ^2.1.1
 
-
   # Provider + Stack pattern
   provider: ^5.0.0
-  get_it: ^6.0.0
-  stacked: ^2.1.1
-  stacked_services: ^0.6.7
-  cupertino_icons: ^1.0.2
+  get_it: ^7.2.0
+  stacked: ^2.2.7
+  stacked_services: ^0.8.15
+  cupertino_icons: ^1.0.3
+
+  file_picker: ^6.1.1
+
 
 dev_dependencies:
   flutter_test:
