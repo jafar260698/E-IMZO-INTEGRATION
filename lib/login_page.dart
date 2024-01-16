@@ -94,6 +94,12 @@ class LoginPage extends StatelessWidget {
                       isLoading: false),
                 ),
               ),
+              CustomButton(
+                  title: 'Sign File',
+                  onPressed: () {
+                    model.getFileFromStorage();
+                  },
+                  isLoading: false),
               SizedBox(height: 10),
               Visibility(
                 visible: model.isDeepLinkMessageVisible,

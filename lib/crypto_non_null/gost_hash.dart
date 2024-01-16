@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'gost/gost_28147_engine.dart';
 import 'hex.dart';
 import 'ozdst/ozdst_1106_digest.dart';
@@ -12,6 +13,11 @@ class GostHash{
     var h = new List.filled(digest.DigestSize, 0);
     digest.doFinal(h, 0);
     return h;
+  }
+
+  static String hashGost(String text){
+    var ba = hash(utf8.encode(text));
+    return Hex.fromBytes(ba);
   }
 
   static String hashGost2Hex(List<int> raw){

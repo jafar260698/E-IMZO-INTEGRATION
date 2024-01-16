@@ -30,6 +30,9 @@ dependencies:
   stacked_services: ^0.8.15
   cupertino_icons: ^1.0.3
 
+  file_picker: ^6.1.1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

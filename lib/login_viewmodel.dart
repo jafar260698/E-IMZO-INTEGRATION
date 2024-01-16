@@ -1,7 +1,10 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:device_apps/device_apps.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -104,7 +107,7 @@ class LoginViewModel extends BaseViewModel{
     var doc64_send2VerifyFunc = base64Encode(raw!);
     // send doc64_send2VerifyFunc to backend
 
-    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw!)}\n///////////");
+    print("///////////\nchallange: $challange \n challange hash: ${GostHash.hashGost2Hex(raw)}\n///////////");
     print("///////////\nchallange b64: ${doc64_send2VerifyFunc}\n///////////");
 
     
@@ -113,6 +116,40 @@ class LoginViewModel extends BaseViewModel{
     var crc32 = Crc32.calcHex(code);
     code += crc32;
     print("Deep Code $code");
+    _launchURL(code);
+  }
+
+  Future<void> getFileFromStorage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    var file = result.files.first;
+    print(file.bytes);
+
+    File dataFile = new File.fromUri(Uri.parse(file.path!));
+    Uint8List bytes8 = dataFile.readAsBytesSync();
+
+    signFiles(bytes8);
+  }
+
+  void signFiles(Uint8List files) {
+    siteId = "20e2";  // your site id
+    documentId = "2F472331"; // your document id
+    String result = utf8.decode(files); // utf8
+    String result2 = String.fromCharCodes(files); // utf16
+
+    var docHash = GostHash.hashGost2Hex(files);
+    var docHash2 = GostHash.hashGost(result);
+
+    print("DocHash $docHash");
+    print("DocHash2 $docHash2");
+
+    var code = siteId! + documentId! + docHash;
+    var crc32 = Crc32.calcHex(code);
+    print("Crc32 $crc32");
+
+    code += crc32;
+
     _launchURL(code);
   }
 
